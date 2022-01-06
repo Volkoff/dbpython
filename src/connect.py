@@ -1,10 +1,12 @@
 import pyodbc,csv,configparser, datetime, os
-
+#configuration file that can be changed in path file object
 config = configparser.ConfigParser()
 config.read('userinfo.conf')
+#connection to database, bases off your data user info 
 connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};' + f"SERVER={config['USERINFO']['SERVER']};DATABASE={config['USERINFO']['DATABASE']};UID={config['USERINFO']['UID']};PWD={config['USERINFO']['PWD']}")
 
 cursor = connection.cursor()
+#method for inserting into ucet
 def insert_into_ucet(id_uc,cis_uc,banka_naz,kod_ban):
     cursor.execute(f'set identity_insert [ucet] on')
     cursor.execute(f'''
@@ -15,7 +17,7 @@ def insert_into_ucet(id_uc,cis_uc,banka_naz,kod_ban):
     connection.commit()
     print("Inserted succesfully")
 
-
+#method for inserting into zakaznik
 def insert_into_zakaznik(id_zak,jmeno,prijmeni,id_uc):
     cursor.execute(f'set identity_insert [zakaznik] on')
     cursor.execute(f'''
@@ -25,7 +27,7 @@ def insert_into_zakaznik(id_zak,jmeno,prijmeni,id_uc):
                     ''', id_zak,jmeno,prijmeni,id_uc)
     connection.commit()
     print("Inserted succesfully")    
-
+#method for inserting into vyrobce
 def insert_into_vyrobce(id,nazev_vyrobc,sidliste):
     cursor.execute(f'set identity_insert [vyrobce_aut] on')
     cursor.execute(f'''
@@ -36,6 +38,7 @@ def insert_into_vyrobce(id,nazev_vyrobc,sidliste):
     connection.commit()
     print("Inserted succesfully")
 
+#method for inserting into auta
 def insert_into_auta(id,nazev_znacka,barva,id_vyrob):
     cursor.execute(f'set identity_insert [auta] on')
     cursor.execute(f'''
@@ -46,7 +49,7 @@ def insert_into_auta(id,nazev_znacka,barva,id_vyrob):
     connection.commit()
     print("Inserted succesfully")
 
-#YYYY-MM-DD HH:MI:SS
+#method for inserting into pujcka
 def insert_into_pujcka(id,id_zak,id_aut,typ_pujc):
     try:
         now_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -61,6 +64,7 @@ def insert_into_pujcka(id,id_zak,id_aut,typ_pujc):
     except:
         print("Constraint error")
 
+#selects data from table with select query request
 def select_from_table(table):
     cursor.execute(f'SELECT * FROM {table}')
     for i in cursor:
@@ -83,7 +87,7 @@ def export_csv(table):
     sql=f"SELECT * from {table}"
     cursor.execute(sql)
     res = cursor.fetchall()
-    with open("export.csv","w", newline='') as file:
+    with open("../bin/export.csv", "w", newline='') as file:
         for row in res:
             if len(row) != 0:
                 csv.writer(file).writerow(row)
