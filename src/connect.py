@@ -66,9 +66,13 @@ def insert_into_pujcka(id,id_zak,id_aut,typ_pujc):
 
 #selects data from table with select query request
 def select_from_table(table):
-    cursor.execute(f'SELECT * FROM {table}')
-    for i in cursor:
-        print(i)
+    try:
+        cursor.execute(f'SELECT * FROM {table}')
+        for i in cursor:
+            print(i)
+    except Exception:
+        print("table name error")        
+
 
 #method for deletin one row in any table if possible
 def delete_item_id(table,id):
@@ -87,7 +91,7 @@ def export_csv(table):
     sql=f"SELECT * from {table}"
     cursor.execute(sql)
     res = cursor.fetchall()
-    with open("../bin/export.csv", "w", newline='') as file:
+    with open("bin\export.csv", "w", newline='') as file:
         for row in res:
             if len(row) != 0:
                 csv.writer(file).writerow(row)
