@@ -1,7 +1,7 @@
 import pyodbc,csv,configparser, datetime, os
 #configuration file that can be changed in path file object
 config = configparser.ConfigParser()
-config.read('userinfo.conf')
+config.read('bin/userinfo.conf')
 #connection to database, bases off your data user info 
 connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};' + f"SERVER={config['USERINFO']['SERVER']};DATABASE={config['USERINFO']['DATABASE']};UID={config['USERINFO']['UID']};PWD={config['USERINFO']['PWD']}")
 
@@ -162,6 +162,7 @@ def transaction_pujcka(id1,id2):
 def terminal_interface():
     end = False
     while end == False:
+        os.system('cls' if os.name == 'nt' else 'clear')
         print("1. INSERT DATA INTO TABLES")
         print("2. SELECT DATA FROM TABLES")
         print("3. DELETE DATA FROM TABLES")
@@ -233,6 +234,7 @@ def terminal_interface():
             choise = input()
             os.system('cls' if os.name == 'nt' else 'clear')
             select_from_table(choise)
+            untilexit = input()
         if a == 3:
             print("Please select a table(auta,pujcka,ucet,vyrobce_aut,zakaznik): ")
             table = input()
@@ -253,6 +255,7 @@ def terminal_interface():
             os.system('cls' if os.name == 'nt' else 'clear')
             insert_from_csv(table,import_csv(path)) 
         if a == 6:
+            os.system('cls' if os.name == 'nt' else 'clear')
             execute_recent_pujcka()
             untilexit = input()
             os.system('cls' if os.name == 'nt' else 'clear')
